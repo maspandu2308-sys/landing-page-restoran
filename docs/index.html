@@ -9,8 +9,8 @@
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --cream:#faf5eb; --dark:#1a1208; --gold:#c8960c;
-  --gold2:#f5c842; --brown:#8B5E3C; --muted:#7a6040;
+  --cream:#faf5eb;--dark:#1a1208;--gold:#c8960c;
+  --gold2:#f5c842;--brown:#8B5E3C;--muted:#7a6040;
   --font-serif:'Playfair Display',serif;
   --font-sans:'Inter',sans-serif;
   --font-script:'Dancing Script',cursive;
@@ -21,11 +21,12 @@ body{font-family:var(--font-sans);background:var(--cream);color:var(--dark);over
 ::-webkit-scrollbar-track{background:var(--cream)}
 ::-webkit-scrollbar-thumb{background:var(--gold);border-radius:99px}
 
-/* ─── THREE.JS CANVAS ─── */
+/* ─── CANVAS ─── */
 #three-canvas{
   position:fixed;top:0;left:0;
   width:100vw;height:100vh;
   z-index:0;pointer-events:none;
+  transition:opacity .5s ease;
 }
 
 /* ─── PRELOADER ─── */
@@ -33,345 +34,196 @@ body{font-family:var(--font-sans);background:var(--cream);color:var(--dark);over
   position:fixed;inset:0;z-index:9999;
   background:var(--cream);
   display:flex;flex-direction:column;align-items:center;justify-content:center;
-  transition:opacity .8s ease,visibility .8s ease;
+  transition:opacity 1s ease, visibility 1s ease;
 }
 #preloader.hide{opacity:0;visibility:hidden}
-.pre-text{
-  font-family:var(--font-serif);font-size:3rem;font-weight:900;
-  color:var(--dark);letter-spacing:8px;
-  animation:pulse 1.5s ease-in-out infinite;
-}
-.pre-bar{
-  width:0;height:2px;background:var(--gold);
-  margin-top:1.5rem;border-radius:99px;
-  animation:loadBar 2s ease forwards .2s;
-}
-@keyframes loadBar{to{width:160px}}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.pre-logo{font-family:var(--font-serif);font-size:3rem;font-weight:900;color:var(--dark);letter-spacing:8px}
+.pre-script{font-family:var(--font-script);font-size:1.2rem;color:var(--gold);margin-top:.3rem}
+.pre-bar-wrap{width:160px;height:1px;background:rgba(200,150,12,.2);margin-top:2rem;position:relative;overflow:hidden}
+.pre-bar{position:absolute;top:0;left:0;width:0;height:100%;background:var(--gold);animation:barFill 2.3s ease forwards .2s}
+@keyframes barFill{to{width:100%}}
+.pre-pct{font-size:.72rem;letter-spacing:3px;color:var(--muted);margin-top:.8rem;animation:countUp 2.3s ease forwards .2s}
+@keyframes countUp{0%{content:'0%'}}
 
 /* ─── NAVBAR ─── */
 nav{
   position:fixed;top:0;left:0;right:0;z-index:100;
-  padding:1.5rem 5%;
+  padding:1.5rem 6%;
   display:flex;align-items:center;justify-content:space-between;
   transition:all .4s;
 }
-nav.scrolled{
-  background:rgba(250,245,235,.92);backdrop-filter:blur(20px);
-  padding:1rem 5%;border-bottom:1px solid rgba(200,150,12,.15);
-}
-.nav-logo{
-  font-family:var(--font-serif);font-size:1.6rem;font-weight:900;
-  color:var(--dark);letter-spacing:4px;text-decoration:none;
-}
-.nav-links{display:flex;gap:2rem;list-style:none}
-.nav-links a{
-  color:var(--muted);text-decoration:none;font-size:.82rem;
-  letter-spacing:1.5px;text-transform:uppercase;font-weight:500;
-  transition:color .3s;
-}
+nav.scrolled{background:rgba(250,245,235,.94);backdrop-filter:blur(20px);padding:1rem 6%;border-bottom:1px solid rgba(200,150,12,.12)}
+.nav-logo{font-family:var(--font-serif);font-size:1.6rem;font-weight:900;color:var(--dark);letter-spacing:4px;text-decoration:none}
+.nav-links{display:flex;gap:2.2rem;list-style:none}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:.8rem;letter-spacing:1.5px;text-transform:uppercase;font-weight:500;transition:color .3s}
 .nav-links a:hover{color:var(--gold)}
-.nav-cta{
-  background:var(--dark);color:var(--cream);
-  padding:.6rem 1.5rem;font-size:.78rem;
-  letter-spacing:1.5px;text-transform:uppercase;font-weight:600;
-  text-decoration:none;transition:all .3s;
-}
+.nav-cta{background:var(--dark);color:var(--cream);padding:.6rem 1.6rem;font-size:.78rem;letter-spacing:1.5px;text-transform:uppercase;font-weight:600;text-decoration:none;transition:all .3s}
 .nav-cta:hover{background:var(--gold);color:var(--dark)}
 
 /* ─── HERO ─── */
 .hero{
   height:100vh;position:relative;z-index:1;
-  display:flex;flex-direction:column;
-  align-items:center;justify-content:center;
-  text-align:center;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;pointer-events:none;
   background:transparent;
-  pointer-events:none;
 }
-.hero-eyebrow{
-  font-family:var(--font-script);font-size:1.6rem;
-  color:var(--gold);display:block;margin-bottom:.3rem;
-  animation:fadeUp .8s ease both;
-}
+.hero-eyebrow{font-family:var(--font-script);font-size:1.6rem;color:var(--gold);display:block;margin-bottom:.3rem;animation:fadeUp .8s ease both}
 .hero-title{
   font-family:var(--font-serif);
-  font-size:clamp(5rem,14vw,11rem);
-  font-weight:900;color:var(--dark);line-height:.9;
-  letter-spacing:-4px;
-  animation:fadeUp .8s ease .2s both;
+  font-size:clamp(4.5rem,13vw,10rem);
+  font-weight:900;color:var(--dark);line-height:.92;
+  letter-spacing:-3px;animation:fadeUp .8s ease .2s both;
 }
 .hero-title em{font-style:italic;color:var(--gold)}
-.hero-sub{
-  margin-top:1.2rem;font-size:.85rem;letter-spacing:4px;
-  text-transform:uppercase;color:var(--muted);font-weight:400;
-  animation:fadeUp .8s ease .4s both;
+.hero-line{
+  width:80px;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);
+  margin:1.4rem auto;animation:expandLine .8s ease .5s both;transform:scaleX(0);transform-origin:center;
 }
-.hero-actions{
-  display:flex;gap:1.2rem;margin-top:2.5rem;pointer-events:all;
-  animation:fadeUp .8s ease .6s both;
-}
-.btn-dark{
-  background:var(--dark);color:var(--cream);
-  padding:.85rem 2.2rem;font-size:.82rem;
-  letter-spacing:2px;text-transform:uppercase;font-weight:600;
-  text-decoration:none;transition:all .3s;
-}
+.hero-sub{font-size:.82rem;letter-spacing:4px;text-transform:uppercase;color:var(--muted);animation:fadeUp .8s ease .55s both}
+.hero-actions{display:flex;gap:1.2rem;margin-top:2.5rem;pointer-events:all;animation:fadeUp .8s ease .7s both}
+.btn-dark{background:var(--dark);color:var(--cream);padding:.85rem 2.2rem;font-size:.8rem;letter-spacing:2px;text-transform:uppercase;font-weight:600;text-decoration:none;transition:all .3s;display:inline-block}
 .btn-dark:hover{background:var(--gold);color:var(--dark);transform:translateY(-2px)}
-.btn-outline-dark{
-  border:1.5px solid var(--dark);color:var(--dark);
-  padding:.85rem 2.2rem;font-size:.82rem;
-  letter-spacing:2px;text-transform:uppercase;font-weight:600;
-  text-decoration:none;transition:all .3s;
-}
-.btn-outline-dark:hover{background:var(--dark);color:var(--cream)}
+.btn-outline{border:1.5px solid var(--dark);color:var(--dark);padding:.85rem 2.2rem;font-size:.8rem;letter-spacing:2px;text-transform:uppercase;font-weight:600;text-decoration:none;transition:all .3s;display:inline-block}
+.btn-outline:hover{background:var(--dark);color:var(--cream)}
+.hero-scroll{position:absolute;bottom:2.5rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:.5rem;color:var(--muted);font-size:.65rem;letter-spacing:3px;text-transform:uppercase;pointer-events:none;animation:fadeUp .8s ease 1.2s both}
+.scroll-line{width:1px;height:40px;background:linear-gradient(to bottom,var(--gold),transparent);animation:scrollBob 2s ease-in-out infinite}
+@keyframes scrollBob{0%,100%{transform:scaleY(1);opacity:.5}50%{transform:scaleY(.5);opacity:1}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
+@keyframes expandLine{to{transform:scaleX(1)}}
 
-.hero-scroll{
-  position:absolute;bottom:2.5rem;left:50%;transform:translateX(-50%);
-  display:flex;flex-direction:column;align-items:center;gap:.5rem;
-  color:var(--muted);font-size:.65rem;letter-spacing:3px;text-transform:uppercase;
-  pointer-events:none;animation:fadeUp .8s ease 1s both;
-}
-.scroll-line{
-  width:1px;height:40px;
-  background:linear-gradient(to bottom,var(--gold),transparent);
-  animation:scrollAnim 2s ease-in-out infinite;
-}
-@keyframes scrollAnim{0%{transform:scaleY(1);opacity:.6}50%{transform:scaleY(.4);opacity:1}100%{transform:scaleY(1);opacity:.6}}
-@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
-
-/* ─── CONTENT SECTIONS ─── */
-.content-section{
-  position:relative;z-index:2;
-  background:var(--dark);
-  padding:100px 5%;
-}
-.content-section.light{background:#fff}
-.content-section.cream{background:var(--cream)}
-
+/* ─── SECTIONS ─── */
+section{position:relative;z-index:2;padding:100px 6%}
+.s-dark{background:var(--dark)}
+.s-light{background:#fff}
+.s-cream{background:var(--cream)}
 .inner{max-width:1200px;margin:0 auto}
-.section-label{
-  font-size:.72rem;letter-spacing:3px;text-transform:uppercase;
-  color:var(--gold);font-weight:600;display:block;margin-bottom:.5rem;
-}
-.section-title{
-  font-family:var(--font-serif);
-  font-size:clamp(2rem,4vw,3.2rem);
-  font-weight:900;line-height:1.1;margin-bottom:1rem;
-}
-.section-title.light-text{color:#fff}
-.section-title.dark-text{color:var(--dark)}
-.section-title em{font-style:italic;color:var(--gold)}
-.section-desc{font-size:.95rem;line-height:1.9;max-width:520px}
-.section-desc.light-text{color:rgba(255,255,255,.6)}
-.section-desc.dark-text{color:var(--muted)}
+.s-tag{font-size:.7rem;letter-spacing:3px;text-transform:uppercase;color:var(--gold);font-weight:700;display:block;margin-bottom:.5rem}
+.s-title{font-family:var(--font-serif);font-size:clamp(2rem,4vw,3.2rem);font-weight:900;line-height:1.1;margin-bottom:1rem}
+.s-title.lt{color:#fff}
+.s-title.dk{color:var(--dark)}
+.s-title em{font-style:italic;color:var(--gold)}
+.s-desc{font-size:.93rem;line-height:1.9;max-width:500px}
+.s-desc.lt{color:rgba(255,255,255,.5)}
+.s-desc.dk{color:var(--muted)}
+.gold-line{width:50px;height:1.5px;background:linear-gradient(90deg,var(--gold),transparent);margin:1rem 0 1.5rem}
 
-/* ─── STORY SECTION ─── */
-.story-grid{
-  display:grid;grid-template-columns:1fr 1fr;gap:6rem;align-items:center;
-}
-.story-visual{
-  aspect-ratio:3/4;
-  background:linear-gradient(135deg,#1a1208,#2d1f0a);
-  display:flex;align-items:center;justify-content:center;
-  font-size:8rem;position:relative;
-  border:1px solid rgba(200,150,12,.2);
-  overflow:hidden;
-}
-.story-visual::after{
-  content:'';position:absolute;inset:0;
-  background:linear-gradient(135deg,rgba(200,150,12,.08),transparent 50%,rgba(200,150,12,.04));
-}
-.story-badge{
-  position:absolute;bottom:-1px;right:-1px;
-  background:var(--gold);color:var(--dark);
-  padding:1.5rem 2rem;
-  font-family:var(--font-serif);
-}
-.badge-num{font-size:2rem;font-weight:900;line-height:1}
-.badge-txt{font-size:.65rem;letter-spacing:2px;text-transform:uppercase;font-weight:700}
-
-.story-stats{
-  display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:2.5rem;
-}
-.stat-box{
-  border:1px solid rgba(200,150,12,.2);padding:1.2rem;
-  background:rgba(200,150,12,.04);transition:.3s;
-}
-.stat-box:hover{border-color:rgba(200,150,12,.5);background:rgba(200,150,12,.08)}
-.stat-n{font-family:var(--font-serif);font-size:2rem;font-weight:900;color:var(--gold)}
-.stat-l{font-size:.72rem;color:rgba(255,255,255,.45);letter-spacing:1px;margin-top:.2rem}
+/* ─── STORY ─── */
+.story-grid{display:grid;grid-template-columns:1fr 1fr;gap:6rem;align-items:center}
+.story-img{aspect-ratio:3/4;background:linear-gradient(135deg,#1a1208,#2d1f0a);display:flex;align-items:center;justify-content:center;font-size:8rem;position:relative;border:1px solid rgba(200,150,12,.15);overflow:hidden}
+.story-img::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(200,150,12,.07),transparent 60%)}
+.s-badge{position:absolute;bottom:0;right:0;background:var(--gold);color:var(--dark);padding:1.4rem 1.8rem;font-family:var(--font-serif)}
+.s-badge-n{font-size:2rem;font-weight:900;line-height:1}
+.s-badge-t{font-size:.62rem;letter-spacing:2px;text-transform:uppercase;font-weight:700}
+.story-stats{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:2.5rem}
+.sstat{border:1px solid rgba(200,150,12,.2);padding:1.2rem;background:rgba(200,150,12,.04);transition:.3s}
+.sstat:hover{border-color:rgba(200,150,12,.5)}
+.sn{font-family:var(--font-serif);font-size:2rem;font-weight:900;color:var(--gold)}
+.sl{font-size:.72rem;color:rgba(255,255,255,.4);letter-spacing:1px;margin-top:.2rem}
 
 /* ─── MENU ─── */
-.menu-tabs{
-  display:flex;gap:0;border-bottom:1px solid rgba(255,255,255,.08);
-  margin-bottom:3rem;overflow-x:auto;
-}
-.mtab{
-  padding:.8rem 1.8rem;background:none;border:none;cursor:pointer;
-  font-size:.75rem;letter-spacing:2px;text-transform:uppercase;
-  color:rgba(255,255,255,.35);transition:.3s;white-space:nowrap;
-  font-family:var(--font-sans);position:relative;
-}
-.mtab:hover,.mtab.active{color:var(--gold)}
-.mtab.active::after{
-  content:'';position:absolute;bottom:-1px;left:0;right:0;
-  height:1px;background:var(--gold);
-}
-.menu-grid{
-  display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1.2rem;
-}
-.mcart{
-  background:rgba(255,255,255,.03);
-  border:1px solid rgba(255,255,255,.06);
-  padding:1.8rem;transition:.3s;cursor:pointer;position:relative;overflow:hidden;
-}
-.mcart::before{
-  content:'';position:absolute;top:0;left:0;right:0;height:1px;
-  background:linear-gradient(90deg,transparent,var(--gold),transparent);
-  transform:scaleX(0);transition:.4s;
-}
-.mcart:hover{border-color:rgba(200,150,12,.25);transform:translateY(-4px)}
-.mcart:hover::before{transform:scaleX(1)}
-.mc-emoji{font-size:2.5rem;margin-bottom:1rem;display:block}
-.mc-name{font-family:var(--font-serif);font-size:1.1rem;font-weight:700;color:#fff;margin-bottom:.4rem}
-.mc-desc{font-size:.8rem;color:rgba(255,255,255,.4);line-height:1.6;margin-bottom:1rem}
-.mc-foot{display:flex;align-items:center;justify-content:space-between}
-.mc-price{font-family:var(--font-serif);font-size:1.05rem;color:var(--gold);font-weight:700}
-.mc-tag{font-size:.62rem;letter-spacing:1px;text-transform:uppercase;border:1px solid rgba(200,150,12,.3);color:rgba(255,255,255,.3);padding:.2rem .6rem}
+.mtabs{display:flex;border-bottom:1px solid rgba(255,255,255,.07);margin-bottom:3rem;overflow-x:auto}
+.mtab{padding:.8rem 1.8rem;background:none;border:none;cursor:pointer;font-size:.75rem;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.3);transition:.3s;white-space:nowrap;font-family:var(--font-sans);position:relative}
+.mtab.active,.mtab:hover{color:var(--gold)}
+.mtab.active::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:1px;background:var(--gold)}
+.mgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:1.2rem}
+.mcard{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);padding:1.8rem;transition:.3s;cursor:pointer;position:relative;overflow:hidden}
+.mcard::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);transform:scaleX(0);transition:.4s}
+.mcard:hover{border-color:rgba(200,150,12,.2);transform:translateY(-5px)}
+.mcard:hover::before{transform:scaleX(1)}
+.me{font-size:2.4rem;margin-bottom:.9rem;display:block}
+.mn{font-family:var(--font-serif);font-size:1.05rem;font-weight:700;color:#fff;margin-bottom:.35rem}
+.md{font-size:.8rem;color:rgba(255,255,255,.4);line-height:1.6;margin-bottom:.9rem}
+.mf{display:flex;align-items:center;justify-content:space-between}
+.mp{font-family:var(--font-serif);font-size:1rem;color:var(--gold);font-weight:700}
+.mt{font-size:.6rem;letter-spacing:1px;text-transform:uppercase;border:1px solid rgba(200,150,12,.25);color:rgba(255,255,255,.3);padding:.2rem .55rem}
 
 /* ─── FEATURES ─── */
-.feat-grid{
-  display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-top:3rem;
-}
-.feat-card{
-  padding:2rem;border:1px solid rgba(0,0,0,.08);
-  background:#fff;transition:.3s;
-}
-.feat-card:hover{border-color:rgba(200,150,12,.3);box-shadow:0 12px 40px rgba(0,0,0,.08);transform:translateY(-4px)}
-.feat-icon{font-size:2.5rem;margin-bottom:1rem}
-.feat-title{font-family:var(--font-serif);font-size:1.1rem;color:var(--dark);margin-bottom:.4rem}
-.feat-text{font-size:.83rem;color:var(--muted);line-height:1.7}
+.fgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-top:3rem}
+.fcard{padding:2rem;border:1px solid rgba(0,0,0,.07);background:#fff;transition:.3s}
+.fcard:hover{border-color:rgba(200,150,12,.25);box-shadow:0 12px 40px rgba(0,0,0,.07);transform:translateY(-4px)}
+.fi{font-size:2.2rem;margin-bottom:.9rem}
+.ft{font-family:var(--font-serif);font-size:1.05rem;color:var(--dark);margin-bottom:.35rem}
+.fx{font-size:.82rem;color:var(--muted);line-height:1.7}
 
 /* ─── TESTIMONIALS ─── */
-.testi-row{
-  display:flex;gap:1.5rem;overflow-x:auto;padding:1.5rem 0;
-  scrollbar-width:none;
-}
-.testi-row::-webkit-scrollbar{display:none}
-.tcard{
-  min-width:320px;flex-shrink:0;
-  background:rgba(255,255,255,.04);
-  border:1px solid rgba(255,255,255,.07);
-  padding:2rem;transition:.3s;
-}
+.trow{display:flex;gap:1.5rem;overflow-x:auto;padding:1.5rem 0;scrollbar-width:none}
+.trow::-webkit-scrollbar{display:none}
+.tcard{min-width:310px;flex-shrink:0;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);padding:1.8rem;transition:.3s}
 .tcard:hover{border-color:rgba(200,150,12,.2);transform:translateY(-3px)}
-.t-stars{color:var(--gold);margin-bottom:1rem;letter-spacing:3px}
-.t-text{font-size:.88rem;color:rgba(255,255,255,.55);line-height:1.8;margin-bottom:1.5rem;font-style:italic}
-.t-author{display:flex;align-items:center;gap:.75rem}
-.t-ava{width:40px;height:40px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;font-size:1rem}
-.t-name{font-weight:600;color:#fff;font-size:.88rem}
-.t-role{font-size:.72rem;color:rgba(255,255,255,.3)}
+.tstars{color:var(--gold);margin-bottom:.9rem;letter-spacing:3px}
+.ttxt{font-size:.87rem;color:rgba(255,255,255,.5);line-height:1.8;margin-bottom:1.4rem;font-style:italic}
+.tauth{display:flex;align-items:center;gap:.7rem}
+.tava{width:38px;height:38px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;font-size:.95rem}
+.tname{font-weight:600;color:#fff;font-size:.87rem}
+.trole{font-size:.7rem;color:rgba(255,255,255,.3)}
 
 /* ─── RESERVATION ─── */
-.res-grid{display:grid;grid-template-columns:1fr 1.4fr;gap:5rem;align-items:start}
-.res-contact-item{display:flex;align-items:flex-start;gap:1rem;margin-bottom:1.5rem}
-.rc-icon{
-  width:42px;height:42px;background:rgba(200,150,12,.1);
-  border:1px solid rgba(200,150,12,.2);
-  display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;
-}
-.rc-label{font-size:.68rem;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:.2rem}
-.rc-val{font-size:.9rem;color:rgba(255,255,255,.7);line-height:1.5}
-
-.res-form-wrap{
-  background:rgba(255,255,255,.03);
-  border:1px solid rgba(255,255,255,.07);
-  padding:2.5rem;
-}
-.frow{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem}
+.rgrid{display:grid;grid-template-columns:1fr 1.4fr;gap:5rem;align-items:start}
+.rcitem{display:flex;align-items:flex-start;gap:.9rem;margin-bottom:1.4rem}
+.rcicon{width:40px;height:40px;background:rgba(200,150,12,.08);border:1px solid rgba(200,150,12,.18);display:flex;align-items:center;justify-content:center;font-size:.95rem;flex-shrink:0}
+.rclabel{font-size:.65rem;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.28);margin-bottom:.2rem}
+.rcval{font-size:.88rem;color:rgba(255,255,255,.65);line-height:1.5}
+.rform{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);padding:2.5rem}
+.frow2{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem}
 .fgrp{margin-bottom:1.2rem}
-.flabel{display:block;font-size:.68rem;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:.5rem}
-.finput,.fselect{
-  width:100%;background:rgba(255,255,255,.04);
-  border:1px solid rgba(255,255,255,.08);color:#fff;
-  padding:.8rem 1rem;font-family:var(--font-sans);font-size:.88rem;outline:none;
-  transition:.3s;
-}
-.finput:focus,.fselect:focus{border-color:var(--gold);background:rgba(200,150,12,.06)}
-.fselect option{background:#1a1208}
-.fsubmit{
-  width:100%;padding:.95rem;background:var(--gold);color:var(--dark);
-  border:none;cursor:pointer;font-size:.82rem;letter-spacing:2.5px;
-  text-transform:uppercase;font-weight:700;font-family:var(--font-sans);transition:.3s;
-}
-.fsubmit:hover{background:var(--gold2);transform:translateY(-1px)}
+.flbl{display:block;font-size:.65rem;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.28);margin-bottom:.5rem}
+.fin,.fsel{width:100%;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);color:#fff;padding:.78rem 1rem;font-family:var(--font-sans);font-size:.87rem;outline:none;transition:.3s}
+.fin:focus,.fsel:focus{border-color:var(--gold);background:rgba(200,150,12,.06)}
+.fsel option{background:#1a1208}
+.fsub{width:100%;padding:.9rem;background:var(--gold);color:var(--dark);border:none;cursor:pointer;font-size:.8rem;letter-spacing:2.5px;text-transform:uppercase;font-weight:700;font-family:var(--font-sans);transition:.3s}
+.fsub:hover{background:var(--gold2);transform:translateY(-1px)}
 
 /* ─── INFO BAND ─── */
-.info-band{background:var(--gold);padding:2.5rem 5%}
-.info-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:2rem;text-align:center}
-.ii-icon{font-size:1.8rem;margin-bottom:.4rem}
-.ii-label{font-size:.65rem;letter-spacing:2px;text-transform:uppercase;color:var(--dark);opacity:.6;font-weight:700}
-.ii-val{font-family:var(--font-serif);font-size:.95rem;color:var(--dark);margin-top:.2rem}
+.iband{background:var(--gold);padding:2.5rem 6%}
+.ibinner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:2rem;text-align:center}
+.ibi-icon{font-size:1.7rem;margin-bottom:.35rem}
+.ibi-lbl{font-size:.62rem;letter-spacing:2px;text-transform:uppercase;color:rgba(26,18,8,.6);font-weight:700}
+.ibi-val{font-family:var(--font-serif);font-size:.92rem;color:var(--dark);margin-top:.2rem}
 
 /* ─── FOOTER ─── */
-footer{background:var(--dark);border-top:1px solid rgba(255,255,255,.05);padding:60px 5% 30px}
-.footer-top{display:grid;grid-template-columns:2fr 1fr 1fr;gap:4rem;padding-bottom:3rem;border-bottom:1px solid rgba(255,255,255,.05)}
-.fbrand{font-family:var(--font-serif);font-size:1.8rem;font-weight:900;color:var(--gold);letter-spacing:4px;margin-bottom:.3rem}
-.fscript{font-family:var(--font-script);font-size:1rem;color:rgba(255,255,255,.3)}
-.fdesc{font-size:.82rem;color:rgba(255,255,255,.3);line-height:1.8;margin-top:1rem;max-width:240px}
-.fcol-title{font-size:.65rem;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:1rem;font-weight:700}
-.flinks{list-style:none;display:flex;flex-direction:column;gap:.6rem}
-.flinks a{color:rgba(255,255,255,.3);text-decoration:none;font-size:.83rem;transition:.3s}
+footer{background:var(--dark);border-top:1px solid rgba(255,255,255,.05);padding:55px 6% 28px}
+.ftop{display:grid;grid-template-columns:2fr 1fr 1fr;gap:4rem;padding-bottom:3rem;border-bottom:1px solid rgba(255,255,255,.05)}
+.fbrand{font-family:var(--font-serif);font-size:1.8rem;font-weight:900;color:var(--gold);letter-spacing:4px}
+.fscript{font-family:var(--font-script);font-size:1rem;color:rgba(255,255,255,.28)}
+.fdesc{font-size:.82rem;color:rgba(255,255,255,.28);line-height:1.8;margin-top:.8rem;max-width:220px}
+.fcol-t{font-size:.62rem;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:1rem;font-weight:700}
+.flinks{list-style:none;display:flex;flex-direction:column;gap:.55rem}
+.flinks a{color:rgba(255,255,255,.28);text-decoration:none;font-size:.82rem;transition:.3s}
 .flinks a:hover{color:var(--gold)}
-.footer-bottom{padding-top:2rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem}
-.fcopy{font-size:.72rem;color:rgba(255,255,255,.2)}
-.fcredit{font-size:.7rem;color:rgba(255,255,255,.2)}
+.fbot{padding-top:1.8rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem}
+.fcopy,.fcredit{font-size:.7rem;color:rgba(255,255,255,.18)}
 .fcredit a{color:var(--gold);text-decoration:none}
 
 /* ─── REVEAL ─── */
-.reveal{opacity:0;transform:translateY(30px);transition:.8s ease}
-.reveal.on{opacity:1;transform:none}
-.reveal-l{opacity:0;transform:translateX(-30px);transition:.8s ease}
-.reveal-l.on{opacity:1;transform:none}
-.reveal-r{opacity:0;transform:translateX(30px);transition:.8s ease}
-.reveal-r.on{opacity:1;transform:none}
-
-/* ─── COUNTER ─── */
-[data-count]{font-family:var(--font-serif);font-size:2rem;font-weight:900;color:var(--gold)}
+.rv{opacity:0;transform:translateY(28px);transition:.75s ease}
+.rv.on{opacity:1;transform:none}
+.rvl{opacity:0;transform:translateX(-28px);transition:.75s ease}
+.rvl.on{opacity:1;transform:none}
+.rvr{opacity:0;transform:translateX(28px);transition:.75s ease}
+.rvr.on{opacity:1;transform:none}
 
 /* ─── CURSOR ─── */
-.cursor,.cursor-ring{position:fixed;pointer-events:none;z-index:9998;border-radius:50%;transform:translate(-50%,-50%)}
-.cursor{width:8px;height:8px;background:var(--gold)}
-.cursor-ring{width:32px;height:32px;border:1px solid rgba(200,150,12,.5)}
+.cur,.curring{position:fixed;pointer-events:none;z-index:9998;border-radius:50%;transform:translate(-50%,-50%)}
+.cur{width:8px;height:8px;background:var(--gold)}
+.curring{width:30px;height:30px;border:1px solid rgba(200,150,12,.45)}
 
 /* ─── BACK TOP ─── */
-#backTop{
-  position:fixed;bottom:2rem;right:2rem;z-index:99;
-  width:42px;height:42px;background:var(--gold);color:var(--dark);
-  display:flex;align-items:center;justify-content:center;
-  font-size:1.1rem;text-decoration:none;
-  opacity:0;pointer-events:none;transition:.3s;
-}
-#backTop.show{opacity:1;pointer-events:auto}
+#bktop{position:fixed;bottom:2rem;right:2rem;z-index:99;width:42px;height:42px;background:var(--gold);color:var(--dark);display:flex;align-items:center;justify-content:center;font-size:1.1rem;text-decoration:none;opacity:0;pointer-events:none;transition:.3s}
+#bktop.show{opacity:1;pointer-events:auto}
+#bktop:hover{transform:translateY(-3px)}
 
 /* ─── TOAST ─── */
-.toast{
-  position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(10px);
-  background:var(--gold);color:var(--dark);padding:.75rem 2rem;
-  font-size:.83rem;font-weight:600;letter-spacing:1px;
-  opacity:0;transition:.3s;pointer-events:none;z-index:9999;
-}
+.toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(8px);background:var(--gold);color:var(--dark);padding:.7rem 1.8rem;font-size:.82rem;font-weight:600;letter-spacing:.5px;opacity:0;transition:.3s;pointer-events:none;z-index:9999}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
-/* ─── RESPONSIVE ─── */
 @media(max-width:900px){
-  .story-grid,.res-grid,.footer-top{grid-template-columns:1fr}
-  .story-visual{display:none}
-  .feat-grid{grid-template-columns:1fr}
-  .info-inner{grid-template-columns:1fr 1fr}
-  .frow{grid-template-columns:1fr}
+  .story-grid,.rgrid,.ftop{grid-template-columns:1fr}
+  .story-img{display:none}
+  .fgrid{grid-template-columns:1fr}
+  .ibinner{grid-template-columns:1fr 1fr}
+  .frow2{grid-template-columns:1fr}
   .nav-links,.nav-cta{display:none}
-  .hero-title{font-size:clamp(3.5rem,18vw,7rem)}
+  .hero-title{font-size:clamp(3.5rem,17vw,7rem)}
 }
 </style>
 </head>
@@ -379,15 +231,16 @@ footer{background:var(--dark);border-top:1px solid rgba(255,255,255,.05);padding
 
 <!-- PRELOADER -->
 <div id="preloader">
-  <div class="pre-text">AROMA</div>
-  <div class="pre-bar"></div>
+  <div class="pre-logo">AROMA</div>
+  <div class="pre-script">Café & Bistro</div>
+  <div class="pre-bar-wrap"><div class="pre-bar"></div></div>
 </div>
 
 <!-- CURSOR -->
-<div class="cursor" id="cur"></div>
-<div class="cursor-ring" id="curRing"></div>
+<div class="cur" id="cur"></div>
+<div class="curring" id="curring"></div>
 
-<!-- THREE.JS CANVAS -->
+<!-- CANVAS -->
 <canvas id="three-canvas"></canvas>
 
 <!-- NAV -->
@@ -406,38 +259,34 @@ footer{background:var(--dark);border-top:1px solid rgba(255,255,255,.05);padding
 <section class="hero" id="home">
   <span class="hero-eyebrow">Selamat Datang di</span>
   <h1 class="hero-title">AROMA<br><em>Café</em></h1>
+  <div class="hero-line"></div>
   <p class="hero-sub">Yogyakarta · Est. 2018 · Open Daily 07:00–23:00</p>
   <div class="hero-actions">
     <a href="#menu" class="btn-dark">Lihat Menu</a>
-    <a href="#reservation" class="btn-outline-dark">Reservasi</a>
+    <a href="#reservation" class="btn-outline">Reservasi</a>
   </div>
-  <div class="hero-scroll">
-    <div class="scroll-line"></div>
-    Scroll
-  </div>
+  <div class="hero-scroll"><div class="scroll-line"></div>Scroll</div>
 </section>
 
 <!-- STORY -->
-<section class="content-section" id="story">
+<section class="s-dark" id="story">
   <div class="inner">
     <div class="story-grid">
-      <div class="story-visual reveal-l">
-        <span style="font-size:7rem;filter:drop-shadow(0 20px 40px rgba(200,150,12,.3))">☕</span>
-        <div class="story-badge">
-          <div class="badge-num">5★</div>
-          <div class="badge-txt">Rating</div>
-        </div>
+      <div class="story-img rvl">
+        <span style="font-size:7rem;filter:drop-shadow(0 20px 40px rgba(200,150,12,.25))">☕</span>
+        <div class="s-badge"><div class="s-badge-n">5★</div><div class="s-badge-t">Rating</div></div>
       </div>
-      <div class="reveal-r">
-        <span class="section-label">Cerita Kami</span>
-        <h2 class="section-title light-text">Dibuat dari<br><em>Cinta & Kopi</em></h2>
-        <p class="section-desc light-text" style="margin-bottom:1.3rem">AROMA lahir dari sebuah mimpi sederhana — menciptakan ruang di mana setiap cangkir kopi menjadi cerita, dan setiap hidangan menjadi kenangan indah.</p>
-        <p class="section-desc light-text">Biji kopi pilihan dari Aceh, Flores, dan Toraja kami racik dengan penuh keahlian oleh barista bersertifikat internasional.</p>
+      <div class="rvr">
+        <span class="s-tag">Cerita Kami</span>
+        <h2 class="s-title lt">Dibuat dari<br><em>Cinta & Kopi</em></h2>
+        <div class="gold-line"></div>
+        <p class="s-desc lt" style="margin-bottom:1.2rem">AROMA lahir dari sebuah mimpi sederhana — menciptakan ruang di mana setiap cangkir kopi menjadi cerita dan setiap hidangan menjadi kenangan indah.</p>
+        <p class="s-desc lt">Biji kopi pilihan dari Aceh, Flores, dan Toraja kami racik dengan penuh keahlian oleh barista bersertifikat internasional.</p>
         <div class="story-stats">
-          <div class="stat-box"><div class="stat-n" data-count="12000">0</div><div class="stat-l">Tamu per Bulan</div></div>
-          <div class="stat-box"><div class="stat-n" data-count="6">0</div><div class="stat-l">Tahun Berdiri</div></div>
-          <div class="stat-box"><div class="stat-n" data-count="80">0</div><div class="stat-l">Menu Pilihan</div></div>
-          <div class="stat-box"><div class="stat-n" data-count="98">0</div><div class="stat-l">% Puas</div></div>
+          <div class="sstat"><div class="sn" data-count="12000">0</div><div class="sl">Tamu per Bulan</div></div>
+          <div class="sstat"><div class="sn" data-count="6">0</div><div class="sl">Tahun Berdiri</div></div>
+          <div class="sstat"><div class="sn" data-count="80">0</div><div class="sl">Menu Pilihan</div></div>
+          <div class="sstat"><div class="sn" data-count="98">0</div><div class="sl">% Kepuasan</div></div>
         </div>
       </div>
     </div>
@@ -445,88 +294,82 @@ footer{background:var(--dark);border-top:1px solid rgba(255,255,255,.05);padding
 </section>
 
 <!-- MENU -->
-<section class="content-section" id="menu">
+<section class="s-dark" id="menu">
   <div class="inner">
-    <div class="reveal" style="text-align:center;margin-bottom:.5rem">
-      <span class="section-label">Pilihan Terbaik</span>
-      <h2 class="section-title light-text">Menu <em>Unggulan</em></h2>
+    <div class="rv" style="text-align:center;margin-bottom:.5rem">
+      <span class="s-tag">Pilihan Terbaik</span>
+      <h2 class="s-title lt">Menu <em>Unggulan</em></h2>
     </div>
-    <div class="menu-tabs">
+    <div class="mtabs">
       <button class="mtab active" onclick="filterMenu('all',this)">Semua</button>
       <button class="mtab" onclick="filterMenu('kopi',this)">Kopi</button>
       <button class="mtab" onclick="filterMenu('non',this)">Non-Kopi</button>
       <button class="mtab" onclick="filterMenu('food',this)">Makanan</button>
       <button class="mtab" onclick="filterMenu('dessert',this)">Dessert</button>
     </div>
-    <div class="menu-grid" id="menu-grid"></div>
+    <div class="mgrid" id="mgrid"></div>
   </div>
 </section>
 
-<!-- EXPERIENCE -->
-<section class="content-section light" id="experience">
+<!-- FEATURES -->
+<section class="s-light" id="experience">
   <div class="inner">
-    <div class="reveal" style="text-align:center">
-      <span class="section-label" style="color:var(--gold)">Yang Kami Tawarkan</span>
-      <h2 class="section-title dark-text">Lebih dari Sekadar<br><em>Tempat Makan</em></h2>
+    <div class="rv" style="text-align:center">
+      <span class="s-tag">Yang Kami Tawarkan</span>
+      <h2 class="s-title dk">Lebih dari Sekadar<br><em>Tempat Makan</em></h2>
     </div>
-    <div class="feat-grid">
-      <div class="feat-card reveal"><div class="feat-icon">🎵</div><div class="feat-title">Live Music</div><div class="feat-text">Nikmati alunan musik live setiap Jumat & Sabtu malam. Suasana romantis untuk momen spesial Anda.</div></div>
-      <div class="feat-card reveal"><div class="feat-icon">🌿</div><div class="feat-title">Outdoor Garden</div><div class="feat-text">Area taman hijau yang asri, cocok bersantai sambil menikmati udara segar Yogyakarta.</div></div>
-      <div class="feat-card reveal"><div class="feat-icon">📸</div><div class="feat-title">Instagramable</div><div class="feat-text">Setiap sudut dirancang sebagai spot foto terbaik. Abadikan momen indah Anda bersama kami.</div></div>
-      <div class="feat-card reveal"><div class="feat-icon">👨‍🍳</div><div class="feat-title">Chef Profesional</div><div class="feat-text">Tim chef berpengalaman dengan pelatihan internasional memastikan setiap sajian berkualitas premium.</div></div>
-      <div class="feat-card reveal"><div class="feat-icon">💻</div><div class="feat-title">Work-Friendly</div><div class="feat-text">WiFi kencang dan colokan di setiap meja. Tempat sempurna untuk bekerja dan meeting informal.</div></div>
-      <div class="feat-card reveal"><div class="feat-icon">🎂</div><div class="feat-title">Private Event</div><div class="feat-text">Area private untuk ulang tahun, anniversary, atau gathering perusahaan yang berkesan.</div></div>
+    <div class="fgrid">
+      <div class="fcard rv"><div class="fi">🎵</div><div class="ft">Live Music</div><div class="fx">Nikmati alunan musik live setiap Jumat & Sabtu malam untuk momen yang lebih berkesan.</div></div>
+      <div class="fcard rv"><div class="fi">🌿</div><div class="ft">Outdoor Garden</div><div class="fx">Area taman hijau asri untuk bersantai sambil menikmati udara segar Yogyakarta.</div></div>
+      <div class="fcard rv"><div class="fi">📸</div><div class="ft">Instagramable</div><div class="fx">Setiap sudut dirancang sebagai spot foto terbaik. Abadikan momen indah bersama kami.</div></div>
+      <div class="fcard rv"><div class="fi">👨‍🍳</div><div class="ft">Chef Profesional</div><div class="fx">Tim chef berpengalaman memastikan setiap sajian berkualitas premium dan konsisten.</div></div>
+      <div class="fcard rv"><div class="fi">💻</div><div class="ft">Work-Friendly</div><div class="fx">WiFi kencang dan colokan di setiap meja. Tempat ideal untuk bekerja dan meeting.</div></div>
+      <div class="fcard rv"><div class="fi">🎂</div><div class="ft">Private Event</div><div class="fx">Area private untuk ulang tahun, anniversary, atau gathering yang berkesan.</div></div>
     </div>
   </div>
 </section>
 
 <!-- TESTIMONIALS -->
-<section class="content-section" id="testimonials">
+<section class="s-dark" id="testimonials">
   <div class="inner">
-    <div class="reveal"><span class="section-label">Ulasan Tamu</span><h2 class="section-title light-text">Kata Mereka <em>Tentang Kami</em></h2></div>
-    <div class="testi-row">
-      <div class="tcard"><div class="t-stars">★★★★★</div><div class="t-text">"Kopi-nya luar biasa! Sudah coba banyak café di Yogyakarta, tapi AROMA punya keunikan tersendiri. Suasananya sangat nyaman untuk bekerja."</div><div class="t-author"><div class="t-ava">👩</div><div><div class="t-name">Anisa Rahma</div><div class="t-role">Food Blogger · Yogyakarta</div></div></div></div>
-      <div class="tcard"><div class="t-stars">★★★★★</div><div class="t-text">"Tempat anniversary terbaik! Staff sangat ramah dan dekorasi meja melebihi ekspektasi kami. Pasti akan datang lagi dan lagi!"</div><div class="t-author"><div class="t-ava">👨</div><div><div class="t-name">Budi & Sari</div><div class="t-role">Regular Customer</div></div></div></div>
-      <div class="tcard"><div class="t-stars">★★★★★</div><div class="t-text">"Meeting di sini jadi lebih produktif! WiFi kencang, suasana tenang, dan kopi-nya bikin semangat. Highly recommended!"</div><div class="t-author"><div class="t-ava">👩‍💼</div><div><div class="t-name">Dina Kartika</div><div class="t-role">Startup Founder</div></div></div></div>
-      <div class="tcard"><div class="t-stars">★★★★★</div><div class="t-text">"Croissant-nya the best se-Jogja! Setiap pagi mampir sebelum kerja. Harganya sangat worth it untuk kualitas sebagus ini."</div><div class="t-author"><div class="t-ava">👨‍🎨</div><div><div class="t-name">Rizky Pratama</div><div class="t-role">Designer · Daily Visitor</div></div></div></div>
+    <div class="rv"><span class="s-tag">Ulasan Tamu</span><h2 class="s-title lt">Kata Mereka <em>Tentang Kami</em></h2></div>
+    <div class="trow">
+      <div class="tcard"><div class="tstars">★★★★★</div><div class="ttxt">"Kopi-nya luar biasa! Sudah coba banyak café di Yogyakarta, tapi AROMA punya keunikan tersendiri. Suasananya sangat nyaman untuk bekerja."</div><div class="tauth"><div class="tava">👩</div><div><div class="tname">Anisa Rahma</div><div class="trole">Food Blogger · Yogyakarta</div></div></div></div>
+      <div class="tcard"><div class="tstars">★★★★★</div><div class="ttxt">"Tempat anniversary terbaik! Staff sangat ramah dan dekorasi meja melebihi ekspektasi kami. Pasti akan datang lagi!"</div><div class="tauth"><div class="tava">👨</div><div><div class="tname">Budi & Sari</div><div class="trole">Regular Customer</div></div></div></div>
+      <div class="tcard"><div class="tstars">★★★★★</div><div class="ttxt">"Meeting di sini jadi lebih produktif! WiFi kencang, suasana tenang, dan kopi bikin semangat. Highly recommended!"</div><div class="tauth"><div class="tava">👩‍💼</div><div><div class="tname">Dina Kartika</div><div class="trole">Startup Founder</div></div></div></div>
+      <div class="tcard"><div class="tstars">★★★★★</div><div class="ttxt">"Croissant-nya the best se-Jogja! Setiap pagi mampir sebelum kerja. Harganya very worth it untuk kualitas sebagus ini."</div><div class="tauth"><div class="tava">👨‍🎨</div><div><div class="tname">Rizky Pratama</div><div class="trole">Designer · Daily Visitor</div></div></div></div>
     </div>
   </div>
 </section>
 
 <!-- RESERVATION -->
-<section class="content-section" id="reservation">
+<section class="s-dark" id="reservation">
   <div class="inner">
-    <div class="res-grid">
+    <div class="rgrid">
       <div>
-        <span class="section-label reveal">Buat Reservasi</span>
-        <h2 class="section-title light-text reveal">Pesan Meja<br><em>Sekarang</em></h2>
-        <p class="section-desc light-text reveal" style="margin-bottom:2.5rem">Pastikan meja Anda tersedia. Minimal 2 jam sebelum kunjungan.</p>
-        <div class="res-contact-item reveal"><div class="rc-icon">📍</div><div><div class="rc-label">Lokasi</div><div class="rc-val">Jl. Malioboro No. 88<br>Yogyakarta 55213</div></div></div>
-        <div class="res-contact-item reveal"><div class="rc-icon">📞</div><div><div class="rc-label">Telepon / WhatsApp</div><div class="rc-val">+62 878-2501-9502</div></div></div>
-        <div class="res-contact-item reveal"><div class="rc-icon">🕐</div><div><div class="rc-label">Jam Buka</div><div class="rc-val">07:00 – 23:00 (Setiap Hari)</div></div></div>
+        <span class="s-tag rv">Buat Reservasi</span>
+        <h2 class="s-title lt rv">Pesan Meja<br><em>Sekarang</em></h2>
+        <p class="s-desc lt rv" style="margin-bottom:2.5rem">Pastikan meja Anda tersedia. Minimal 2 jam sebelum kunjungan.</p>
+        <div class="rcitem rv"><div class="rcicon">📍</div><div><div class="rclabel">Lokasi</div><div class="rcval">Jl. Malioboro No. 88, Yogyakarta 55213</div></div></div>
+        <div class="rcitem rv"><div class="rcicon">📞</div><div><div class="rclabel">WhatsApp</div><div class="rcval">+62 878-2501-9502</div></div></div>
+        <div class="rcitem rv"><div class="rcicon">🕐</div><div><div class="rclabel">Jam Buka</div><div class="rcval">07:00 – 23:00 (Setiap Hari)</div></div></div>
       </div>
-      <div class="res-form-wrap reveal">
+      <div class="rform rv">
         <form onsubmit="submitRes(event)">
-          <div class="frow">
-            <div class="fgrp"><label class="flabel">Nama</label><input type="text" class="finput" placeholder="Nama Anda" required></div>
-            <div class="fgrp"><label class="flabel">No. WhatsApp</label><input type="tel" class="finput" placeholder="08xx-xxxx-xxxx" required></div>
+          <div class="frow2">
+            <div class="fgrp"><label class="flbl">Nama</label><input type="text" class="fin" placeholder="Nama Anda" required></div>
+            <div class="fgrp"><label class="flbl">No. WhatsApp</label><input type="tel" class="fin" placeholder="08xx-xxxx-xxxx" required></div>
           </div>
-          <div class="frow">
-            <div class="fgrp"><label class="flabel">Tanggal</label><input type="date" class="finput" required></div>
-            <div class="fgrp"><label class="flabel">Waktu</label>
-              <select class="fselect finput" required><option value="">-- Pilih --</option><option>07:00–09:00</option><option>09:00–11:00</option><option>11:00–13:00</option><option>13:00–15:00</option><option>15:00–17:00</option><option>17:00–19:00</option><option>19:00–21:00</option><option>21:00–23:00</option></select>
-            </div>
+          <div class="frow2">
+            <div class="fgrp"><label class="flbl">Tanggal</label><input type="date" class="fin" required></div>
+            <div class="fgrp"><label class="flbl">Waktu</label><select class="fsel" required><option value="">-- Pilih --</option><option>07:00–09:00</option><option>09:00–11:00</option><option>11:00–13:00</option><option>13:00–15:00</option><option>15:00–17:00</option><option>17:00–19:00</option><option>19:00–21:00</option><option>21:00–23:00</option></select></div>
           </div>
-          <div class="frow">
-            <div class="fgrp"><label class="flabel">Jumlah Tamu</label>
-              <select class="fselect finput" required><option value="">-- Pilih --</option><option>1-2 orang</option><option>3-5 orang</option><option>6-10 orang</option><option>10+ orang (Private)</option></select>
-            </div>
-            <div class="fgrp"><label class="flabel">Jenis Kunjungan</label>
-              <select class="fselect finput"><option>Casual Dining</option><option>Anniversary / Romantic</option><option>Meeting / Work</option><option>Birthday Party</option><option>Gathering / Event</option></select>
-            </div>
+          <div class="frow2">
+            <div class="fgrp"><label class="flbl">Jumlah Tamu</label><select class="fsel" required><option value="">-- Pilih --</option><option>1-2 orang</option><option>3-5 orang</option><option>6-10 orang</option><option>10+ (Private Room)</option></select></div>
+            <div class="fgrp"><label class="flbl">Jenis Kunjungan</label><select class="fsel"><option>Casual Dining</option><option>Anniversary</option><option>Meeting / Work</option><option>Birthday Party</option><option>Gathering</option></select></div>
           </div>
-          <div class="fgrp"><label class="flabel">Catatan Khusus</label><input type="text" class="finput" placeholder="Alergi, permintaan khusus, dll..."></div>
-          <button type="submit" class="fsubmit" id="resBtn">✦ Konfirmasi Reservasi</button>
+          <div class="fgrp"><label class="flbl">Catatan Khusus</label><input type="text" class="fin" placeholder="Alergi, permintaan khusus..."></div>
+          <button type="submit" class="fsub" id="resBtn">✦ Konfirmasi Reservasi</button>
         </form>
       </div>
     </div>
@@ -534,232 +377,248 @@ footer{background:var(--dark);border-top:1px solid rgba(255,255,255,.05);padding
 </section>
 
 <!-- INFO BAND -->
-<div class="info-band">
-  <div class="info-inner">
-    <div><div class="ii-icon">📍</div><div class="ii-label">Lokasi</div><div class="ii-val">Jl. Malioboro No. 88<br>Yogyakarta</div></div>
-    <div><div class="ii-icon">🕐</div><div class="ii-label">Jam Buka</div><div class="ii-val">07:00 – 23:00<br>Setiap Hari</div></div>
-    <div><div class="ii-icon">📞</div><div class="ii-label">Reservasi</div><div class="ii-val">+62 878-2501-9502</div></div>
-    <div><div class="ii-icon">📶</div><div class="ii-label">WiFi</div><div class="ii-val">AROMA_Cafe<br>Pass: kopiaroma</div></div>
+<div class="iband">
+  <div class="ibinner">
+    <div><div class="ibi-icon">📍</div><div class="ibi-lbl">Lokasi</div><div class="ibi-val">Jl. Malioboro No. 88<br>Yogyakarta</div></div>
+    <div><div class="ibi-icon">🕐</div><div class="ibi-lbl">Jam Buka</div><div class="ibi-val">07:00 – 23:00<br>Setiap Hari</div></div>
+    <div><div class="ibi-icon">📞</div><div class="ibi-lbl">Reservasi</div><div class="ibi-val">+62 878-2501-9502</div></div>
+    <div><div class="ibi-icon">📶</div><div class="ibi-lbl">WiFi</div><div class="ibi-val">AROMA_Cafe<br>Pass: kopiaroma</div></div>
   </div>
 </div>
 
 <!-- FOOTER -->
 <footer>
   <div class="inner">
-    <div class="footer-top">
-      <div>
-        <div class="fbrand">AROMA</div>
-        <div class="fscript">Café & Bistro</div>
-        <p class="fdesc">Tempat di mana setiap cangkir menjadi cerita dan setiap momen menjadi kenangan indah.</p>
-      </div>
-      <div><div class="fcol-title">Navigasi</div><ul class="flinks"><li><a href="#story">Tentang</a></li><li><a href="#menu">Menu</a></li><li><a href="#experience">Experience</a></li><li><a href="#reservation">Reservasi</a></li></ul></div>
-      <div><div class="fcol-title">Kontak</div><ul class="flinks"><li><a href="#">Jl. Malioboro No. 88</a></li><li><a href="#">Yogyakarta, 55213</a></li><li><a href="tel:+6287825019502">+62 878-2501-9502</a></li><li><a href="mailto:hello@aromacafe.id">hello@aromacafe.id</a></li></ul></div>
+    <div class="ftop">
+      <div><div class="fbrand">AROMA</div><div class="fscript">Café & Bistro</div><p class="fdesc">Tempat di mana setiap cangkir menjadi cerita dan setiap momen menjadi kenangan indah.</p></div>
+      <div><div class="fcol-t">Navigasi</div><ul class="flinks"><li><a href="#story">Tentang</a></li><li><a href="#menu">Menu</a></li><li><a href="#experience">Experience</a></li><li><a href="#reservation">Reservasi</a></li></ul></div>
+      <div><div class="fcol-t">Kontak</div><ul class="flinks"><li><a href="#">Jl. Malioboro No. 88</a></li><li><a href="#">Yogyakarta, 55213</a></li><li><a href="tel:+6287825019502">+62 878-2501-9502</a></li><li><a href="mailto:hello@aromacafe.id">hello@aromacafe.id</a></li></ul></div>
     </div>
-    <div class="footer-bottom">
+    <div class="fbot">
       <div class="fcopy">© 2026 AROMA Café & Bistro. All rights reserved.</div>
       <div class="fcredit">Dibuat oleh <a href="https://www.craftoraweb.site" target="_blank">craftoraweb.site</a></div>
     </div>
   </div>
 </footer>
 
-<a href="#home" id="backTop">↑</a>
+<a href="#home" id="bktop">↑</a>
 <div class="toast" id="toast"></div>
 
 <script>
-/* ══════════════════════════════════════
-   THREE.JS 3D SCENE
-══════════════════════════════════════ */
+/* ═══════════════════════════════════════════
+   THREE.JS — REAL FOOD PHOTO DISCS IN 3D
+═══════════════════════════════════════════ */
 (function(){
-  const canvas = document.getElementById('three-canvas');
-  const W = window.innerWidth, H = window.innerHeight;
 
-  /* Scene */
-  const scene = new THREE.Scene();
-  scene.background = new THREE.Color(0xfaf5eb);
-  scene.fog = new THREE.FogExp2(0xfaf5eb, 0.08);
+/* Food photos dari Unsplash CDN (CORS enabled) */
+const FOOD_ITEMS = [
+  { url:'https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=400&auto=format&fit=crop', label:'Latte Art',      pos:[ 2.8,  0.7,  0.0], scale:1.05 },
+  { url:'https://images.unsplash.com/photo-1447933601403-0c6688de566e?w=400&auto=format&fit=crop', label:'Coffee Beans',  pos:[-3.2,  1.3, -0.4], scale:0.90 },
+  { url:'https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=400&auto=format&fit=crop', label:'Croissant',      pos:[ 2.5, -1.9,  0.3], scale:0.95 },
+  { url:'https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=400&auto=format&fit=crop', label:'Chocolate Cake',pos:[-2.6, -1.5,  0.7], scale:1.00 },
+  { url:'https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=400&auto=format&fit=crop', label:'Macarons',       pos:[ 0.6,  2.3, -0.2], scale:0.85 },
+  { url:'https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?w=400&auto=format&fit=crop', label:'Cappuccino',   pos:[-1.3,  1.9,  0.3], scale:0.88 },
+  { url:'https://images.unsplash.com/photo-1551106652-a5bcf4b29ab6?w=400&auto=format&fit=crop', label:'Donuts',         pos:[ 3.3, -0.7, -0.4], scale:0.92 },
+  { url:'https://images.unsplash.com/photo-1470324161839-ce2bb6fa6bc3?w=400&auto=format&fit=crop', label:'Ice Cream',    pos:[-3.6, -0.6,  0.2], scale:0.82 },
+  { url:'https://images.unsplash.com/photo-1464965911861-746a04b4bca6?w=400&auto=format&fit=crop', label:'Strawberry',   pos:[ 1.9,  2.1,  0.5], scale:0.78 },
+  { url:'https://images.unsplash.com/photo-1488477181946-6428a0291777?w=400&auto=format&fit=crop', label:'Waffles',      pos:[-1.6, -2.3,  0.6], scale:0.86 },
+  { url:'https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=400&auto=format&fit=crop', label:'Tiramisu',       pos:[ 0.0,  0.0,  1.5], scale:0.70 },
+  { url:'https://images.unsplash.com/photo-1551024506-0bccd828d307?w=400&auto=format&fit=crop', label:'Pancakes',       pos:[-0.5, -0.8, -1.0], scale:0.68 },
+];
 
-  /* Camera */
-  const camera = new THREE.PerspectiveCamera(55, W/H, 0.1, 100);
-  camera.position.set(0, 0, 7);
+const canvas = document.getElementById('three-canvas');
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0xfaf5eb);
+scene.fog = new THREE.FogExp2(0xfaf5eb, 0.06);
 
-  /* Renderer */
-  const renderer = new THREE.WebGLRenderer({canvas, antialias:true});
-  renderer.setSize(W, H);
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-  renderer.shadowMap.enabled = true;
-  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-  renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.2;
-  renderer.outputEncoding = THREE.sRGBEncoding;
+const camera = new THREE.PerspectiveCamera(52, innerWidth/innerHeight, 0.1, 100);
+camera.position.z = 7.5;
 
-  /* Lighting */
-  const ambient = new THREE.AmbientLight(0xfff8e7, 0.7);
-  scene.add(ambient);
+const renderer = new THREE.WebGLRenderer({canvas, antialias:true});
+renderer.setSize(innerWidth, innerHeight);
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.3;
 
-  const sun = new THREE.DirectionalLight(0xfff5d0, 2.5);
-  sun.position.set(8, 12, 8);
-  sun.castShadow = true;
-  sun.shadow.mapSize.set(2048,2048);
-  sun.shadow.camera.near = 0.1;
-  sun.shadow.camera.far = 50;
-  scene.add(sun);
+/* ─── Lighting ─── */
+scene.add(new THREE.AmbientLight(0xfff8e7, 1.2));
 
-  const pt1 = new THREE.PointLight(0xc8960c, 3, 25);
-  pt1.position.set(-4, 3, 5);
-  scene.add(pt1);
+const sun = new THREE.DirectionalLight(0xfffdf0, 2.8);
+sun.position.set(6, 10, 8);
+sun.castShadow = true;
+sun.shadow.mapSize.set(2048,2048);
+scene.add(sun);
 
-  const pt2 = new THREE.PointLight(0xd97706, 2, 20);
-  pt2.position.set(4, -3, 4);
-  scene.add(pt2);
+const pt1 = new THREE.PointLight(0xd4a017, 2.5, 22);
+pt1.position.set(-3, 4, 6);
+scene.add(pt1);
 
-  const pt3 = new THREE.PointLight(0xffffff, 1.5, 15);
-  pt3.position.set(0, 5, 2);
-  scene.add(pt3);
+const pt2 = new THREE.PointLight(0xc8960c, 1.8, 18);
+pt2.position.set(4, -3, 5);
+scene.add(pt2);
 
-  /* ── MATERIALS ── */
-  const matGold = new THREE.MeshStandardMaterial({color:0xc8960c, metalness:.9, roughness:.1});
-  const matGold2 = new THREE.MeshStandardMaterial({color:0xf5c842, metalness:.85, roughness:.15});
-  const matBronze = new THREE.MeshStandardMaterial({color:0x8B5E3C, metalness:.8, roughness:.25});
-  const matCream = new THREE.MeshStandardMaterial({color:0xfdf6e3, metalness:.05, roughness:.8});
-  const matDark = new THREE.MeshStandardMaterial({color:0x1a1208, metalness:.3, roughness:.6});
-  const matCopper = new THREE.MeshStandardMaterial({color:0xb87333, metalness:.9, roughness:.1});
-  const matRose = new THREE.MeshStandardMaterial({color:0xe8c4a0, metalness:.6, roughness:.2});
+/* ─── Disk creator ─── */
+const loader = new THREE.TextureLoader();
+loader.crossOrigin = 'anonymous';
 
-  /* ── OBJECTS ── */
-  const objs = [];
+const discs = [];
 
-  function addObj(geo, mat, px, py, pz, scale, rx, ry, rz){
-    const m = new THREE.Mesh(geo, mat);
-    m.position.set(px, py, pz);
-    m.scale.setScalar(scale);
-    m.rotation.set(rx||0, ry||0, rz||0);
-    m.castShadow = true;
-    m.receiveShadow = true;
-    scene.add(m);
-    objs.push({
-      mesh: m,
-      ox:px, oy:py, oz:pz,
-      rsx: (Math.random()-.5)*.008,
-      rsy: (Math.random()-.5)*.012,
-      rsz: (Math.random()-.5)*.006,
-      fSpd: .4 + Math.random()*.5,
-      fAmp: .12 + Math.random()*.25,
-      fOff: Math.random() * Math.PI * 2,
-    });
-    return m;
-  }
+// Shared circle geometry & gold ring geometry
+const SEGS = 128;
+const circleGeo = new THREE.CircleGeometry(1, SEGS);
+const ringGeo   = new THREE.TorusGeometry(1, 0.045, 12, SEGS);
+const ringMat   = new THREE.MeshStandardMaterial({color:0xc8960c, metalness:.85, roughness:.12});
 
-  /* Big torus (coffee ring) */
-  addObj(new THREE.TorusGeometry(1.1,.32,32,100), matGold, 2.8, .6, 0, 1, .3, .5, 0);
-  /* Icosahedron (gem) */
-  addObj(new THREE.IcosahedronGeometry(.72,1), matGold2, -3.2, 1.2, -.5, 1, .5, .3, 0);
-  /* Tetrahedron (pyramid) */
-  addObj(new THREE.TetrahedronGeometry(.65), matBronze, 2.4, -1.8, .3, 1, .2, .8, .3);
-  /* Sphere (bubble) */
-  addObj(new THREE.SphereGeometry(.5,32,32), matCream, -2.5, -1.4, .8, 1, 0, 0, 0);
-  /* Octahedron (crystal) */
-  addObj(new THREE.OctahedronGeometry(.55,0), matGold, .6, 2.2, -.3, 1, .4, .2, 0);
-  /* Torus knot (decorative) */
-  addObj(new THREE.TorusKnotGeometry(.38,.1,128,16), matCopper, -1.2, 1.8, .2, 1, .3, .5, 0);
-  /* Box (sugar cube) */
-  addObj(new THREE.BoxGeometry(.6,.6,.6), matGold2, 3.2, -.8, -.3, 1, .4, .6, .2);
-  /* Cone (pastry) */
-  addObj(new THREE.ConeGeometry(.38,.85,8), matBronze, -3.5, -.8, .1, 1, 0, .5, 0);
-  /* Cylinder (cup) */
-  addObj(new THREE.CylinderGeometry(.25,.3,.65,32), matDark, 1.8, 2, .5, 1, 0, 0, 0);
-  /* Rose sphere */
-  addObj(new THREE.SphereGeometry(.35,32,32), matRose, -1.5, -2.2, .6, 1);
+// Shadow plane below each disc
+const shadowGeo = new THREE.CircleGeometry(1, SEGS);
+const shadowMat = new THREE.ShadowMaterial({opacity:.10});
 
-  /* Small gems scattered */
-  const geoOct = new THREE.OctahedronGeometry(.18,0);
-  [[-4,0,.3],[4,1.5,-.2],[.5,-2.8,.4],[-2.8,2.5,0],[3.5,2,.2]].forEach(([x,y,z])=>{
-    addObj(geoOct, Math.random()>.5?matGold:matGold2, x,y,z, 1);
-  });
+function createDisc(item){
+  const group = new THREE.Group();
+  group.position.set(...item.pos);
+  group.scale.setScalar(item.scale);
 
-  /* Ground plane (shadow catcher) */
-  const plane = new THREE.Mesh(
-    new THREE.PlaneGeometry(30,30),
-    new THREE.ShadowMaterial({opacity:.05})
+  /* Photo face */
+  const mat = new THREE.MeshBasicMaterial({color:0xe8d5b5}); // placeholder warm cream
+  const mesh = new THREE.Mesh(circleGeo, mat);
+  mesh.castShadow = true;
+  group.add(mesh);
+
+  /* Gold border ring */
+  const ring = new THREE.Mesh(ringGeo, ringMat);
+  ring.position.z = .01;
+  group.add(ring);
+
+  /* Subtle back face (dark side) */
+  const backMat = new THREE.MeshStandardMaterial({color:0x2a1f0a, metalness:.1, roughness:.9, side:THREE.BackSide});
+  const back = new THREE.Mesh(circleGeo, backMat);
+  back.position.z = -.005;
+  group.add(back);
+
+  /* Shadow catcher below */
+  const shadow = new THREE.Mesh(shadowGeo, shadowMat);
+  shadow.rotation.x = -Math.PI/2;
+  shadow.position.y = -1.2;
+  shadow.receiveShadow = true;
+  group.add(shadow);
+
+  scene.add(group);
+
+  /* Async texture load */
+  loader.load(
+    item.url,
+    (tex) => {
+      tex.encoding = THREE.sRGBEncoding;
+      tex.anisotropy = renderer.capabilities.getMaxAnisotropy();
+      // crop texture to square using UV mapping (CircleGeometry does this naturally)
+      mesh.material = new THREE.MeshBasicMaterial({map:tex});
+    },
+    undefined,
+    () => {
+      // fallback: warm gradient tone if image fails
+      mesh.material = new THREE.MeshStandardMaterial({
+        color: [0xc8960c,0xd97706,0x8B5E3C,0xf5c842][Math.floor(Math.random()*4)],
+        metalness:.3, roughness:.6
+      });
+    }
   );
-  plane.rotation.x = -Math.PI/2;
-  plane.position.y = -3.5;
-  plane.receiveShadow = true;
-  scene.add(plane);
 
-  /* ── MOUSE ── */
-  let mx = 0, my = 0, tmx = 0, tmy = 0;
-  document.addEventListener('mousemove', e => {
-    tmx = (e.clientX / window.innerWidth  - .5) * 2;
-    tmy = (e.clientY / window.innerHeight - .5) * 2;
+  discs.push({
+    group,
+    ox:item.pos[0], oy:item.pos[1], oz:item.pos[2],
+    rsx: (Math.random()-.5)*.004,
+    rsy: (Math.random()-.5)*.006 + .003,
+    rsz: (Math.random()-.5)*.002,
+    fSpd: .35 + Math.random()*.4,
+    fAmp: .10 + Math.random()*.22,
+    fOff: Math.random()*Math.PI*2,
+    tiltX: (Math.random()-.5)*.6,  // random initial tilt
+    tiltZ: (Math.random()-.5)*.4,
   });
 
-  /* ── SCROLL ── */
-  let scrollY = 0;
-  window.addEventListener('scroll', () => { scrollY = window.scrollY; });
+  /* Set initial random tilt so they don't all face camera flat */
+  group.rotation.x = (Math.random()-.5)*.5;
+  group.rotation.z = (Math.random()-.5)*.35;
+}
 
-  /* ── ANIMATE ── */
-  let t = 0;
-  function tick(){
-    requestAnimationFrame(tick);
-    t += .008;
+FOOD_ITEMS.forEach(createDisc);
 
-    /* smooth mouse */
-    mx += (tmx - mx) * .06;
-    my += (tmy - my) * .06;
+/* ─── Mouse ─── */
+let mx=0,my=0,tmx=0,tmy=0;
+document.addEventListener('mousemove', e=>{
+  tmx = (e.clientX/innerWidth  -.5)*2;
+  tmy = (e.clientY/innerHeight -.5)*2;
+});
 
-    /* camera drift */
-    camera.position.x += (mx * .9 - camera.position.x) * .04;
-    camera.position.y += (-my * .6 - camera.position.y) * .04;
-    camera.position.z = 7 + scrollY * .003;
-    camera.lookAt(scene.position);
+/* ─── Scroll ─── */
+let scY=0;
+window.addEventListener('scroll',()=>{ scY=scrollY; });
 
-    /* animate light */
-    pt1.position.x = Math.sin(t*.4) * 4;
-    pt1.position.y = Math.cos(t*.3) * 3 + 1;
-    pt2.position.x = Math.cos(t*.5) * 3;
-    pt2.position.y = Math.sin(t*.35) * 2 - 1;
+/* ─── Animate ─── */
+let t = 0;
+function tick(){
+  requestAnimationFrame(tick);
+  t += .007;
+  mx += (tmx-mx)*.055;
+  my += (tmy-my)*.055;
 
-    /* animate objects */
-    objs.forEach(o => {
-      o.mesh.rotation.x += o.rsx;
-      o.mesh.rotation.y += o.rsy;
-      o.mesh.rotation.z += o.rsz;
-      o.mesh.position.y = o.oy + Math.sin(t * o.fSpd + o.fOff) * o.fAmp;
-      /* subtle mouse parallax per object */
-      o.mesh.position.x = o.ox + mx * (.05 + Math.abs(o.oz)*.02);
-      o.mesh.position.z = o.oz + my * .04;
-    });
+  /* Camera follows mouse softly */
+  camera.position.x += (mx*.9  - camera.position.x)*.04;
+  camera.position.y += (-my*.65 - camera.position.y)*.04;
+  camera.position.z  = 7.5 + scY*.0025;
+  camera.lookAt(scene.position);
 
-    /* hide canvas after hero */
-    const heroH = document.querySelector('.hero').offsetHeight;
-    const fade = Math.max(0, 1 - (scrollY - heroH*.3) / (heroH*.5));
-    canvas.style.opacity = fade;
+  /* Animate lights */
+  pt1.position.x = Math.sin(t*.35)*5;
+  pt1.position.y = Math.cos(t*.28)*3 + 2;
+  pt2.position.x = Math.cos(t*.42)*4;
+  pt2.position.y = Math.sin(t*.30)*2 - 1;
 
-    renderer.render(scene, camera);
-  }
-  tick();
+  /* Animate each disc */
+  discs.forEach(d=>{
+    /* Float up/down */
+    d.group.position.y = d.oy + Math.sin(t*d.fSpd + d.fOff)*d.fAmp;
 
-  /* resize */
-  window.addEventListener('resize', ()=>{
-    const W2 = window.innerWidth, H2 = window.innerHeight;
-    camera.aspect = W2/H2;
-    camera.updateProjectionMatrix();
-    renderer.setSize(W2, H2);
+    /* Slow rotation (coins spinning) */
+    d.group.rotation.y += d.rsy;
+    d.group.rotation.x += d.rsx * .3;  // very subtle x wobble
+
+    /* Mouse parallax — different depth = different parallax strength */
+    const depthFactor = 1 - (d.oz + 1.5) * .15;
+    d.group.position.x = d.ox + mx * .12 * depthFactor;
+    d.group.position.z = d.oz + my * .08;
   });
+
+  /* Fade canvas when scrolling past hero */
+  const heroH = document.querySelector('.hero')?.offsetHeight || innerHeight;
+  canvas.style.opacity = Math.max(0, 1-(scY-heroH*.25)/(heroH*.5));
+
+  renderer.render(scene, camera);
+}
+tick();
+
+window.addEventListener('resize',()=>{
+  camera.aspect = innerWidth/innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(innerWidth, innerHeight);
+});
+
 })();
 
-/* ══════════════════════════════════════
-   MENU DATA
-══════════════════════════════════════ */
-const MENU_DATA = [
+/* ═══════════════════════════════════
+   MENU
+═══════════════════════════════════ */
+const MENU = [
   {c:'kopi',e:'☕',n:'Signature Espresso',d:'Double shot Aceh Gayo dengan crema sempurna.',p:'Rp 35.000',t:'Best Seller'},
   {c:'kopi',e:'🧋',n:'Caramel Macchiato',d:'Espresso, susu steam segar, dan siraman karamel premium.',p:'Rp 42.000',t:'Popular'},
   {c:'kopi',e:'🌊',n:'Blue Ocean Latte',d:'Latte unik dengan butterfly pea flower yang berubah warna.',p:'Rp 48.000',t:'Viral'},
   {c:'kopi',e:'❄️',n:'Cold Brew 24H',d:'Cold brew diseduh 24 jam untuk rasa kaya dan smooth.',p:'Rp 38.000',t:'Signature'},
-  {c:'non',e:'🍵',n:'Matcha Latte',d:'Matcha premium Jepang dengan susu oat creamy.',p:'Rp 45.000',t:'Favorite'},
+  {c:'non',e:'🍵',n:'Matcha Latte',d:'Matcha premium Jepang dengan susu oat yang creamy.',p:'Rp 45.000',t:'Favorite'},
   {c:'non',e:'🌸',n:'Rose Lychee Tea',d:'Teh bunga mawar dengan leci segar, dingin menyegarkan.',p:'Rp 40.000',t:'Fresh'},
   {c:'non',e:'🥭',n:'Mango Passionfruit',d:'Smoothie mangga dan markisa dengan layer cantik.',p:'Rp 43.000',t:'Seasonal'},
-  {c:'food',e:'🥐',n:'Butter Croissant',d:'Berlapis mentega Prancis, crispy di luar lembut di dalam.',p:'Rp 32.000',t:'Daily Fresh'},
+  {c:'food',e:'🥐',n:'Butter Croissant',d:'Berlapis mentega Prancis, crispy luar lembut dalam.',p:'Rp 32.000',t:'Daily Fresh'},
   {c:'food',e:'🍝',n:'Truffle Mushroom Pasta',d:'Fusilli dengan saus jamur truffle dan parmesan shaved.',p:'Rp 78.000',t:'Chef Special'},
   {c:'food',e:'🥗',n:'Garden Salad Bowl',d:'Quinoa, avocado, dan dressing lemon tahini.',p:'Rp 65.000',t:'Healthy'},
   {c:'food',e:'🥞',n:'Fluffy Japanese Pancake',d:'Pancake soufflé Jepang dengan maple syrup.',p:'Rp 55.000',t:'Instagramable'},
@@ -768,125 +627,67 @@ const MENU_DATA = [
   {c:'dessert',e:'🍮',n:'Crème Brûlée',d:'Custard vanilla dengan lapisan gula karamel renyah.',p:'Rp 49.000',t:'Classic'},
   {c:'dessert',e:'🍓',n:'Strawberry Cheesecake',d:'Creamy cheesecake dengan topping strawberry segar.',p:'Rp 55.000',t:'Favorite'},
 ];
-
-function renderMenu(filter){
-  const grid = document.getElementById('menu-grid');
-  const data = filter==='all' ? MENU_DATA : MENU_DATA.filter(m=>m.c===filter);
-  grid.innerHTML = data.map(m=>`
-    <div class="mcart">
-      <span class="mc-emoji">${m.e}</span>
-      <div class="mc-name">${m.n}</div>
-      <div class="mc-desc">${m.d}</div>
-      <div class="mc-foot">
-        <div class="mc-price">${m.p}</div>
-        <div class="mc-tag">${m.t}</div>
-      </div>
-    </div>`).join('');
-  grid.querySelectorAll('.mcart').forEach((c,i)=>{
-    c.style.cssText='opacity:0;transform:translateY(20px)';
-    setTimeout(()=>{c.style.cssText='transition:.4s ease;opacity:1;transform:none'},i*60);
-  });
+function renderMenu(f){
+  const g=document.getElementById('mgrid');
+  const d=f==='all'?MENU:MENU.filter(m=>m.c===f);
+  g.innerHTML=d.map(m=>`<div class="mcard"><span class="me">${m.e}</span><div class="mn">${m.n}</div><div class="md">${m.d}</div><div class="mf"><div class="mp">${m.p}</div><div class="mt">${m.t}</div></div></div>`).join('');
+  g.querySelectorAll('.mcard').forEach((c,i)=>{c.style.cssText='opacity:0;transform:translateY(18px)';setTimeout(()=>{c.style.cssText='transition:.4s ease;opacity:1;transform:none'},i*55);});
 }
-function filterMenu(f,btn){
-  document.querySelectorAll('.mtab').forEach(t=>t.classList.remove('active'));
-  btn.classList.add('active');
-  renderMenu(f);
-}
+function filterMenu(f,btn){document.querySelectorAll('.mtab').forEach(t=>t.classList.remove('active'));btn.classList.add('active');renderMenu(f);}
 renderMenu('all');
 
-/* ══════════════════════════════════════
-   SCROLL & REVEAL
-══════════════════════════════════════ */
-const nav = document.getElementById('nav');
-const backTop = document.getElementById('backTop');
+/* ═══════════════════════════════════
+   SCROLL / REVEAL
+═══════════════════════════════════ */
 window.addEventListener('scroll',()=>{
-  nav.classList.toggle('scrolled', window.scrollY > 60);
-  backTop.classList.toggle('show', window.scrollY > 500);
+  document.getElementById('nav').classList.toggle('scrolled',scrollY>55);
+  document.getElementById('bktop').classList.toggle('show',scrollY>500);
 });
+const rvObs=new IntersectionObserver(e=>{e.forEach(v=>{if(v.isIntersecting){v.target.classList.add('on');rvObs.unobserve(v.target);}});},{threshold:.12});
+document.querySelectorAll('.rv,.rvl,.rvr').forEach(el=>rvObs.observe(el));
 
-const reveals = document.querySelectorAll('.reveal,.reveal-l,.reveal-r');
-new IntersectionObserver(entries=>{
-  entries.forEach((e,i)=>{
-    if(e.isIntersecting){
-      setTimeout(()=>e.target.classList.add('on'),i*80);
-      e.target._obs?.unobserve(e.target);
-    }
-  });
-},{threshold:.12}).observe||reveals.forEach(el=>{
-  const obs=new IntersectionObserver(entries=>{
-    if(entries[0].isIntersecting){el.classList.add('on');obs.unobserve(el);}
-  },{threshold:.12});
-  el._obs=obs; obs.observe(el);
-});
-// fallback
-const obs2 = new IntersectionObserver(entries=>{
-  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('on');obs2.unobserve(e.target);}});
-},{threshold:.12});
-reveals.forEach(el=>obs2.observe(el));
-
-/* ══════════════════════════════════════
+/* ═══════════════════════════════════
    COUNTER
-══════════════════════════════════════ */
+═══════════════════════════════════ */
 document.querySelectorAll('[data-count]').forEach(el=>{
-  const target = +el.dataset.count;
-  const isLarge = target >= 1000;
-  let done = false;
-  const cObs = new IntersectionObserver(entries=>{
-    if(entries[0].isIntersecting && !done){
-      done = true; let cur = 0;
-      const step = target/60;
-      const t = setInterval(()=>{
-        cur = Math.min(cur+step, target);
-        if(isLarge) el.textContent = Math.floor(cur/1000)+'rb+';
-        else if(target===98) el.textContent = Math.floor(cur)+'%';
-        else el.textContent = Math.floor(cur)+'+';
-        if(cur>=target) clearInterval(t);
-      },16);
-      cObs.unobserve(el);
-    }
-  },{threshold:.5});
-  cObs.observe(el);
+  const t=+el.dataset.count;
+  let done=false;
+  const o=new IntersectionObserver(e=>{
+    if(e[0].isIntersecting&&!done){done=true;let c=0;const step=t/60;
+      const ti=setInterval(()=>{c=Math.min(c+step,t);
+        el.textContent=t>=1000?Math.floor(c/1000)+'rb+':t===98?Math.floor(c)+'%':Math.floor(c)+'+';
+        if(c>=t)clearInterval(ti);},16);o.unobserve(el);}},{threshold:.5});
+  o.observe(el);
 });
 
-/* ══════════════════════════════════════
+/* ═══════════════════════════════════
    FORM
-══════════════════════════════════════ */
+═══════════════════════════════════ */
 function submitRes(e){
   e.preventDefault();
   const btn=document.getElementById('resBtn');
-  btn.textContent='...'; btn.disabled=true;
-  setTimeout(()=>{
-    btn.textContent='✓ Reservasi Diterima!';
-    btn.style.background='#22c55e';
-    showToast('✓ Reservasi berhasil! Konfirmasi via WhatsApp segera.');
+  btn.textContent='...mengirim';btn.disabled=true;
+  setTimeout(()=>{btn.textContent='✓ Reservasi Diterima!';btn.style.background='#22c55e';
+    showToast('✓ Berhasil! Konfirmasi akan dikirim via WhatsApp.');
     e.target.reset();
-    setTimeout(()=>{btn.textContent='✦ Konfirmasi Reservasi';btn.style.background='';btn.disabled=false;},4000);
-  },1500);
+    setTimeout(()=>{btn.textContent='✦ Konfirmasi Reservasi';btn.style.background='';btn.disabled=false;},4000);},1500);
 }
-function showToast(msg){
-  const t=document.getElementById('toast');
-  t.textContent=msg; t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'),4000);
-}
+function showToast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),4000);}
 
-/* ══════════════════════════════════════
+/* ═══════════════════════════════════
    CURSOR
-══════════════════════════════════════ */
-const cur=document.getElementById('cur'), ring=document.getElementById('curRing');
+═══════════════════════════════════ */
+const cur=document.getElementById('cur'),ring=document.getElementById('curring');
 let cx=0,cy=0,rx=0,ry=0;
 document.addEventListener('mousemove',e=>{cx=e.clientX;cy=e.clientY;cur.style.left=cx+'px';cur.style.top=cy+'px';});
-(function animCur(){rx+=(cx-rx)*.12;ry+=(cy-ry)*.12;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(animCur);})();
-document.querySelectorAll('a,button,.mcart,.feat-card,.tcard').forEach(el=>{
-  el.addEventListener('mouseenter',()=>{cur.style.transform='translate(-50%,-50%) scale(2)';ring.style.transform='translate(-50%,-50%) scale(1.5)';});
+(function a(){rx+=(cx-rx)*.12;ry+=(cy-ry)*.12;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(a);})();
+document.querySelectorAll('a,button,.mcard,.fcard,.tcard').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{cur.style.transform='translate(-50%,-50%) scale(2.2)';ring.style.transform='translate(-50%,-50%) scale(1.6)';});
   el.addEventListener('mouseleave',()=>{cur.style.transform='translate(-50%,-50%) scale(1)';ring.style.transform='translate(-50%,-50%) scale(1)';});
 });
 
-/* ══════════════════════════════════════
-   PRELOADER
-══════════════════════════════════════ */
-window.addEventListener('load',()=>{
-  setTimeout(()=>document.getElementById('preloader').classList.add('hide'), 2500);
-});
+/* PRELOADER */
+window.addEventListener('load',()=>setTimeout(()=>document.getElementById('preloader').classList.add('hide'),2600));
 </script>
 </body>
 </html>
